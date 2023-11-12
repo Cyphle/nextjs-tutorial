@@ -2,8 +2,19 @@ import Link from 'next/link';
 import Head from 'next/head';
 import Script from 'next/script';
 import Layout from '../../components/layout';
+import utilStyles from '../../styles/utils.module.css';
+import { getSortedPostsData } from '../../lib/posts';
 
-export default function FirstPost() {
+export async function getStaticProps() {
+  const allPostsData = getSortedPostsData();
+  return {
+    props: {
+      allPostsData,
+    },
+  };
+}
+
+export default function FirstPost({ allPostsData }) {
   return (
     <Layout>
       <Head>
@@ -21,6 +32,18 @@ export default function FirstPost() {
       <h2>
         <Link href="/">Back to home</Link>
       </h2>
+
+      <ul className={utilStyles.list}>
+        {allPostsData.map(({ id, date, title }) => (
+          <li className={utilStyles.listItem} key={id}>
+            {title}
+            <br />
+            {id}
+            <br />
+            {date}
+          </li>
+        ))}
+      </ul>
     </Layout>
   );
 }
